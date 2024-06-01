@@ -8,6 +8,31 @@ use Exception;
 
 class EnderecoController extends Controller
 {
+    public function create()
+    {
+        return view('pages.form-endereco');
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'contato_id' => 'required|exists:contatos,id',
+                'cep' => 'required|string|max:10',
+                'endereco' => 'required|string|max:255',
+                'numero_residencia' => 'required|string|max:10',
+                'bairro' => 'required|string|max:100',
+                'cidade' => 'required|string|max:100',
+                'uf' => 'required|string|max:2',
+            ]);
+
+            $endereco = Endereco::create($validatedData);
+
+            return redirect()->route('contatos.show', $endereco->contato_id)->with('success', 'Endereço criado com sucesso!');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Erro ao cadastrar endereço: ' . $e->getMessage());
+        }
+    }
     public function obterEnderecoPorContato($contato_id)
     {
         try {

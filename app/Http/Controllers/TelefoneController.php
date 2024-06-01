@@ -7,7 +7,29 @@ use Illuminate\Http\Request;
 use Exception;
 
 class TelefoneController extends Controller
-{
+{   
+    public function create()
+    {
+        return view('pages.form-telefone');
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'contato_id' => 'required|exists:contatos,id',
+                'telefone_comercial' => 'nullable|string|max:20',
+                'telefone_residencial' => 'nullable|string|max:20',
+                'telefone_celular' => 'nullable|string|max:20',
+            ]);
+
+            $telefone = Telefone::create($validatedData);
+
+            return redirect()->route('contatos.show', $telefone->contato_id)->with('success', 'Telefone criado com sucesso!');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Erro ao cadastrar telefone: ' . $e->getMessage());
+        }
+    }
     public function obterTelefonesPorContato($contato_id)
     {
         try {

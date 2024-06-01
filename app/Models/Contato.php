@@ -7,7 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contato extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'nome_completo', 'cpf', 'email', 'data_nascimento'
     ];
+
+    public function endereco()
+    {
+        return $this->hasOne(Endereco::class);
+    }
+
+    public function telefones()
+    {
+        return $this->hasMany(Telefone::class);
+    }
 }

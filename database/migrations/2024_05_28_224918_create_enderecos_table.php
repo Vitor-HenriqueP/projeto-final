@@ -18,7 +18,7 @@ class CreateEnderecosTable extends Migration
             $table->string('cidade');
             $table->string('uf');
             $table->timestamps();
-            
+
             $table->foreign('contato_id')->references('id')->on('contatos')->onDelete('cascade');
         });
     }

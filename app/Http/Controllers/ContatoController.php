@@ -7,16 +7,27 @@ use Illuminate\Http\Request;
 
 class ContatoController extends Controller
 {
+    // Listar todos os contatos
     public function index()
     {
-        return Contato::all();
+        $contatos = Contato::all();
+        return view('pages.contatos', compact('contatos'));
     }
 
+    // Mostrar um único contato
     public function show($id)
     {
-        return Contato::find($id);
+        $contato = Contato::find($id);
+        return view('pages.exibir_contatos', compact('contato'));
     }
 
+    // Exibir o formulário para criar um novo contato
+    public function create()
+    {
+        return view('pages.form-contato');
+    }
+
+    // Armazenar um novo contato no banco de dados
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -26,9 +37,19 @@ class ContatoController extends Controller
             'data_nascimento' => 'required|date',
         ]);
 
-        return Contato::create($validatedData);
+        Contato::create($validatedData);
+
+        return redirect()->route('contatos.index')->with('success', 'Contato criado com sucesso!');
     }
 
+    // Exibir o formulário para editar um contato existente
+    public function edit($id)
+    {
+        $contato = Contato::find($id);
+        return view('pages.form-contato', compact('contato'));
+    }
+
+    // Atualizar um contato existente no banco de dados
     public function update(Request $request, $id)
     {
         $contato = Contato::find($id);
@@ -42,21 +63,22 @@ class ContatoController extends Controller
             ]);
 
             $contato->update($validatedData);
-            return $contato;
+            return redirect()->route('contatos.index')->with('success', 'Contato atualizado com sucesso!');
         }
 
-        return response()->json(['message' => 'Contato não encontrado'], 404);
+        return redirect()->route('contatos.index')->with('error', 'Contato não encontrado');
     }
 
+    // Deletar um contato
     public function destroy($id)
     {
         $contato = Contato::find($id);
 
         if ($contato) {
             $contato->delete();
-            return response()->json(['message' => 'Contato deletado com sucesso']);
+            return redirect()->route('contatos.index')->with('success', 'Contato deletado com sucesso!');
         }
 
-        return response()->json(['message' => 'Contato não encontrado'], 404);
+        return redirect()->route('contatos.index')->with('error', 'Contato não encontrado');
     }
 }
