@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Telefone;
+use App\Models\Contato;
 use Illuminate\Http\Request;
 use Exception;
 
@@ -10,7 +11,8 @@ class TelefoneController extends Controller
 {   
     public function create()
     {
-        return view('pages.form-telefone');
+        $contatos = Contato::all();
+        return view('pages.form-telefone', compact('contatos'));
     }
 
     public function store(Request $request)
@@ -29,6 +31,7 @@ class TelefoneController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Erro ao cadastrar telefone: ' . $e->getMessage());
         }
+        return redirect()->route('telefones.create')->with('success', 'Telefone criado com sucesso!');
     }
     public function obterTelefonesPorContato($contato_id)
     {

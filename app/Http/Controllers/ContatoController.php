@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contato;
+use App\Models\Endereco;
+use App\Models\Telefone;
 use Illuminate\Http\Request;
 
 class ContatoController extends Controller
@@ -17,8 +19,11 @@ class ContatoController extends Controller
     // Mostrar um único contato
     public function show($id)
     {
-        $contato = Contato::find($id);
-        return view('pages.exibir_contatos', compact('contato'));
+        $contato = Contato::findOrFail($id);
+        $endereco = Endereco::where('contato_id', $id)->first();
+        $telefones = Telefone::where('contato_id', $id)->first();
+
+        return view('pages/exibir_contatos', compact('contato', 'endereco', 'telefones'));
     }
 
     // Exibir o formulário para criar um novo contato

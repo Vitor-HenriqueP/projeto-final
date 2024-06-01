@@ -12,7 +12,9 @@
             <p><strong>Nome Completo:</strong> {{ $contato->nome_completo }}</p>
             <p><strong>CPF:</strong> {{ $contato->cpf }}</p>
             <p><strong>Email:</strong> {{ $contato->email }}</p>
-            <p><strong>Data de Nascimento:</strong> {{ $contato->data_nascimento->format('d/m/Y') }}</p>
+            <p><strong>Data de Nascimento:</strong> 
+                {{ \Carbon\Carbon::parse($contato->data_nascimento)->format('d/m/Y') }}
+            </p>
 
             <h2>Endereço</h2>
             @if ($endereco)

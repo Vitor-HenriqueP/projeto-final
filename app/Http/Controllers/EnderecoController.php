@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Endereco;
+use App\Models\Contato;
 use Illuminate\Http\Request;
 use Exception;
 
@@ -10,7 +11,9 @@ class EnderecoController extends Controller
 {
     public function create()
     {
-        return view('pages.form-endereco');
+        $contatos = Contato::all();
+
+        return view('pages.form-endereco', compact('contatos'));
     }
 
     public function store(Request $request)
@@ -32,6 +35,7 @@ class EnderecoController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Erro ao cadastrar endereço: ' . $e->getMessage());
         }
+        return redirect()->route('enderecos.create')->with('success', 'Endereço criado com sucesso!');
     }
     public function obterEnderecoPorContato($contato_id)
     {
